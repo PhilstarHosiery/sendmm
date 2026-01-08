@@ -1,7 +1,7 @@
-SENDMATTERMOST
+SendMattermost
 ================================================================================
 
-A lightweight, native C++ CLI utility for Philstar Hosiery Inc. that pipes 
+A lightweight, native C++ CLI utility for Philstar Hosiery, Inc. that pipes 
 standard input (stdin) directly to a specific Mattermost channel. This is 
 designed to replace the legacy Java "SendMatrix" tool.
 
@@ -20,7 +20,7 @@ FreeBSD server:
 INSTALLATION
 --------------------------------------------------------------------------------
 The project is configured to install automatically to:
-/storage/philstar/biz/SendMattermost
+/storage/philstar/
 
 1. Clone or Copy source files to a folder.
 2. Run the following commands to build and install:
@@ -57,11 +57,11 @@ Syntax:
 
 Example 1: Simple Message
     echo "Warning: Server Update Starting..." | \
-    /storage/philstar/biz/SendMattermost/bin/SendMattermost config.properties <CHANNEL_ID>
+    /storage/philstar/bin/SendMattermost config.properties <CHANNEL_ID>
 
 Example 2: Piping a Log File
     cat /var/log/backup.log | \
-    /storage/philstar/biz/SendMattermost/bin/SendMattermost config.properties <CHANNEL_ID>
+    /storage/philstar/bin/SendMattermost config.properties <CHANNEL_ID>
 
 
 FINDING THE CHANNEL ID
