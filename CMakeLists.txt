@@ -33,4 +33,4 @@ target_link_libraries(sendmm PRIVATE ${CURL_LIBRARIES})
 install(TARGETS sendmm DESTINATION bin)
 
 # Install Sample Config to /usr/local/etc/sendmm.conf.sample
-install(FILES conf/sendmm.conf DESTINATION etc RENAME sendmm.conf.sample)
+install(FILES conf/sample.conf DESTINATION etc RENAME sendmm.conf.sample)
