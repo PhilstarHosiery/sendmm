@@ -1,12 +1,11 @@
 SendMattermost
 ================================================================================
 
-A lightweight, native C++ CLI utility for Philstar Hosiery, Inc. that pipes 
-standard input (stdin) directly to a specific Mattermost channel. This is 
-designed to replace the legacy Java "SendMatrix" tool.
+A lightweight, native C++ CLI utility that pipes standard input (stdin)
+directly to a specific Mattermost channel.
 
 It is ideal for server automation, cron jobs, and backup scripts.
-(e.g., backup.sh | SendMattermost ...)
+(e.g., backup.sh | sendmm config.conf)
 
 
 PREREQUISITES (FreeBSD)
@@ -19,10 +18,7 @@ FreeBSD server:
 
 INSTALLATION
 --------------------------------------------------------------------------------
-The project is configured to install automatically to:
-/storage/philstar/
-
-1. Clone or Copy source files to a folder.
+1. Clone or copy source files to a folder.
 2. Run the following commands to build and install:
 
     mkdir build
@@ -31,21 +27,22 @@ The project is configured to install automatically to:
     make
     make install
 
-The executable will be placed at:
-/storage/philstar/bin/SendMattermost
+The executable will be installed to /usr/local/bin/sendmm
 
 
 CONFIGURATION
 --------------------------------------------------------------------------------
-Create a configuration file (e.g., config.properties) with the following format. 
-Do not use quotes around values.
+Create a configuration file with the webhook URL. Do not use quotes around values.
 
-    mattermost.server=https://mm.philstar.biz
-    mattermost.username=your_bot_account
-    mattermost.password=your_secure_password
+    mattermost.webhook_url=https://your-mattermost-server.com/hooks/your-hook-key
 
-Security Note: Ensure this file is readable ONLY by the user running the 
-script (e.g., chmod 600 config.properties).
+To create a webhook in Mattermost:
+1. Go to Integrations > Incoming Webhooks > Add Incoming Webhook
+2. Select a default channel and save
+3. Copy the webhook URL
+
+Security Note: Ensure this file is readable ONLY by the user running the
+script (e.g., chmod 600 config.conf).
 
 
 USAGE
@@ -53,39 +50,34 @@ USAGE
 The program reads the message body from Standard Input (stdin).
 
 Syntax:
-    /path/to/SendMattermost <config_file_path> <channel_id>
+    sendmm <config_file> [channel_name]
 
 Example 1: Simple Message
-    echo "Warning: Server Update Starting..." | \
-    /storage/philstar/bin/SendMattermost config.properties <CHANNEL_ID>
+    echo "Backup completed successfully" | sendmm ~/.config/sendmm.conf
 
-Example 2: Piping a Log File
-    cat /var/log/backup.log | \
-    /storage/philstar/bin/SendMattermost config.properties <CHANNEL_ID>
+Example 2: Override Channel
+    echo "Alert!" | sendmm ~/.config/sendmm.conf town-square
+
+Example 3: Piping a Log File
+    cat /var/log/backup.log | sendmm ~/.config/sendmm.conf
 
 
-FINDING THE CHANNEL ID
+CHANNEL OVERRIDE
 --------------------------------------------------------------------------------
-You cannot use the channel name (e.g., "town-square"). You must use the 
-Channel ID (a 26-character alphanumeric string).
+The webhook posts to its default channel unless you specify an override.
+You can use either the channel name (e.g., "town-square") or channel ID.
 
-How to find it:
-1. Open Mattermost in a web browser.
-2. Go to the channel you want to send messages to.
-3. Click the Channel Name (header) > View Info.
-4. Copy the "ID" string at the bottom (e.g., pg4s...).
+Note: The webhook must have permission to post to the target channel.
 
 
 TROUBLESHOOTING
 --------------------------------------------------------------------------------
-* Login Failed: 
-  Check your username/password in the config file. Ensure the user is not 
-  deactivated.
+* HTTP 400/403:
+  The webhook URL is invalid or the webhook doesn't have permission to post
+  to the specified channel.
 
-* Mattermost rejected post (HTTP 403): 
-  The user logged in successfully but does not have permission to post in 
-  that specific channel. Check that the bot account has joined the channel 
-  matching the ID.
+* HTTP 404:
+  The webhook has been deleted or the URL is incorrect.
 
-* nlohmann/json header not found: 
+* nlohmann/json header not found:
   Run "pkg install nlohmann-json".
