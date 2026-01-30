@@ -61,19 +61,26 @@ std::string loadWebhookUrl(const std::string& filepath) {
     throw std::runtime_error("Config missing 'mattermost.webhook_url'");
 }
 
+// --- Helper: Capture curl response body ---
+size_t captureResponse(void* ptr, size_t size, size_t nmemb, void* userdata) {
+    std::string* response = static_cast<std::string*>(userdata);
+    response->append(static_cast<char*>(ptr), size * nmemb);
+    return size * nmemb;
+}
+
 // --- Send Function ---
 void sendWebhook(const std::string& url, const std::string& message, const std::string& channelOverride) {
     CURL* curl = curl_easy_init();
     if(curl) {
         json payload;
         payload["text"] = message;
-        
-        // Optional: Override the default channel if provided
+
         if (!channelOverride.empty()) {
             payload["channel"] = channelOverride;
         }
 
         std::string jsonStr = payload.dump();
+        std::string response;
         struct curl_slist* headers = NULL;
         headers = curl_slist_append(headers, "Content-Type: application/json");
 
@@ -81,9 +88,11 @@ void sendWebhook(const std::string& url, const std::string& message, const std::
         curl_easy_setopt(curl, CURLOPT_POST, 1L);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonStr.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, captureResponse);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
         CURLcode res = curl_easy_perform(curl);
-        
+
         long http_code = 0;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 
@@ -94,7 +103,11 @@ void sendWebhook(const std::string& url, const std::string& message, const std::
             throw std::runtime_error("CURL Connection Failed: " + std::string(curl_easy_strerror(res)));
         }
         if (http_code >= 400) {
-            throw std::runtime_error("Mattermost Rejected Post (HTTP " + std::to_string(http_code) + ")");
+            std::string err = "HTTP " + std::to_string(http_code);
+            if (!response.empty()) {
+                err += ": " + response;
+            }
+            throw std::runtime_error(err);
         }
     }
 }
