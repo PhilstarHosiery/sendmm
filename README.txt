@@ -55,7 +55,7 @@ Syntax:
 Example 1: Simple Message
     echo "Backup completed successfully" | sendmm ~/.config/sendmm.conf
 
-Example 2: Override Channel
+Example 2: Override Channel (use URL slug, not display name)
     echo "Alert!" | sendmm ~/.config/sendmm.conf town-square
 
 Example 3: Piping a Log File
@@ -65,9 +65,10 @@ Example 3: Piping a Log File
 CHANNEL OVERRIDE
 --------------------------------------------------------------------------------
 The webhook posts to its default channel unless you specify an override.
-You can use either the channel name (e.g., "town-square") or channel ID.
+Use the channel name (URL slug), e.g., "town-square" or "climate-monitor-alerts".
 
-Note: The webhook must have permission to post to the target channel.
+Note: Channel IDs and display names do not work - only the URL slug.
+The webhook must have permission to post to the target channel.
 
 
 TROUBLESHOOTING

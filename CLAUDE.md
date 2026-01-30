@@ -31,7 +31,9 @@ Config files use simple `key=value` format without quotes:
 mattermost.webhook_url=https://mattermost.url/hooks/hook_key
 ```
 
-Usage: `echo "message" | sendmm <config_file> [channel_name]`
+Usage: `echo "message" | sendmm <config_file> [channel]`
+
+Channel override must be the URL slug (e.g., `town-square`), not display name or ID.
 
 ## Dependencies
 

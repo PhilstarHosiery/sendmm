@@ -21,7 +21,7 @@ void printHelp() {
               << "\n"
               << "Arguments:\n"
               << "  config_file    Path to config file with mattermost.webhook_url\n"
-              << "  channel        Optional channel override (name or ID)\n"
+              << "  channel        Optional channel name (URL slug, e.g., town-square)\n"
               << "\n"
               << "Options:\n"
               << "  -h, --help     Show this help message\n"
