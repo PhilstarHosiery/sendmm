@@ -2,10 +2,34 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cstring>
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
+
+const char* VERSION = "1.0.0";
+
+void printVersion() {
+    std::cout << "sendmm " << VERSION << std::endl;
+}
+
+void printHelp() {
+    std::cout << "Usage: sendmm <config_file> [channel]\n"
+              << "\n"
+              << "Pipe stdin to a Mattermost channel via webhook.\n"
+              << "\n"
+              << "Arguments:\n"
+              << "  config_file    Path to config file with mattermost.webhook_url\n"
+              << "  channel        Optional channel override (name or ID)\n"
+              << "\n"
+              << "Options:\n"
+              << "  -h, --help     Show this help message\n"
+              << "  -v, --version  Show version number\n"
+              << "\n"
+              << "Example:\n"
+              << "  echo \"Hello\" | sendmm ~/.config/sendmm.conf\n";
+}
 
 // --- Helper: Trim whitespace ---
 std::string trim(const std::string& str) {
@@ -77,9 +101,19 @@ void sendWebhook(const std::string& url, const std::string& message, const std::
 
 // --- Main ---
 int main(int argc, char* argv[]) {
-    // Usage: ./SendMattermost <config_file> [optional_channel_name]
+    if (argc >= 2) {
+        if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
+            printHelp();
+            return 0;
+        }
+        if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
+            printVersion();
+            return 0;
+        }
+    }
+
     if (argc < 2) {
-        std::cerr << "Usage: SendMattermost <config_file> [channel_name]" << std::endl;
+        printHelp();
         return 1;
     }
 
