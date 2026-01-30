@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SendMattermost (sendmm) is a lightweight C++17 CLI utility that pipes stdin to Mattermost channels via webhooks. Designed for server automation, cron jobs, and backup scripts on FreeBSD.
+sendmm is a lightweight C++17 CLI utility that pipes stdin to Mattermost channels via webhooks. Designed for server automation, cron jobs, and backup scripts.
 
 ## Build Commands
 
@@ -15,7 +15,7 @@ make
 make install   # installs to /usr/local/bin/sendmm
 ```
 
-Prerequisites on FreeBSD: `pkg install curl nlohmann-json cmake`
+See README.md for platform-specific prerequisites (FreeBSD, Linux, macOS).
 
 ## Architecture
 

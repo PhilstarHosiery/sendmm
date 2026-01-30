@@ -9,10 +9,26 @@ Ideal for server automation, cron jobs, and backup scripts.
 backup.sh | sendmm config.conf
 ```
 
-## Prerequisites (FreeBSD)
+## Prerequisites
 
+**FreeBSD:**
 ```bash
 pkg install curl nlohmann-json cmake
+```
+
+**Linux (Debian/Ubuntu):**
+```bash
+apt install libcurl4-openssl-dev nlohmann-json3-dev cmake build-essential
+```
+
+**Linux (Fedora/RHEL):**
+```bash
+dnf install libcurl-devel json-devel cmake gcc-c++
+```
+
+**macOS:**
+```bash
+brew install curl nlohmann-json cmake
 ```
 
 ## Installation
@@ -80,7 +96,7 @@ The webhook must have permission to post to the target channel.
 |-------|-------|
 | HTTP 400/403 | Webhook URL is invalid or lacks permission to post to the channel |
 | HTTP 404 | Webhook has been deleted or URL is incorrect |
-| nlohmann/json header not found | Run `pkg install nlohmann-json` |
+| nlohmann/json header not found | Install nlohmann-json (see Prerequisites) |
 
 ## License
 
